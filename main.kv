@@ -1,0 +1,688 @@
+#:kivy 2.0.0
+
+#:import SlideTransition kivy.uix.screenmanager.SlideTransition
+
+# Глобальные стили для виджетов
+<Label>:
+    font_size: '16sp'
+    color: 0, 0, 0, 1
+
+<Button>:
+    font_size: '16sp'
+    background_color: 0.2, 0.6, 0.86, 1
+    color: 1, 1, 1, 1
+    background_normal: ''
+
+<TextInput>:
+    font_size: '16sp'
+    foreground_color: 0, 0, 0, 1
+    background_color: 1, 1, 1, 1
+    padding: [10, 10, 10, 10]
+    multiline: False
+
+<Spinner>:
+    font_size: '16sp'
+    background_color: 1, 1, 1, 1
+    color: 0, 0, 0, 1
+    background_normal: ''
+    size_hint_y: None
+    height: dp(48)
+
+<ScreenManagement>:
+    transition: SlideTransition()
+
+<LoginScreen>:
+    name: 'login'
+    username: username
+    password: password
+    role_spinner: role_spinner
+    message_label: message_label
+
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: dp(20)
+        padding: dp(40)
+        canvas.before:
+            Color:
+                rgba: 0.95, 0.95, 0.95, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Label:
+            text: 'Вход в систему'
+            font_size: '28sp'
+            bold: True
+            size_hint_y: None
+            height: self.texture_size[1]
+
+        Label:
+            id: message_label
+            text: ''
+            color: 1, 0, 0, 1
+            size_hint_y: None
+            height: self.texture_size[1]
+
+        TextInput:
+            id: username
+            hint_text: 'Имя пользователя'
+
+        TextInput:
+            id: password
+            hint_text: 'Пароль'
+            password: True
+
+        Spinner:
+            id: role_spinner
+            text: 'Выберите роль'
+            values: ['Мастер', 'Логист', 'Администратор']
+
+        BoxLayout:
+            size_hint_y: None
+            height: dp(48)
+            spacing: dp(10)
+
+            Button:
+                text: 'Войти'
+                on_press: root.login()
+
+            Button:
+                text: 'Регистрация'
+                on_press: app.root.current = 'register'
+
+<RegisterScreen>:
+    name: 'register'
+    username: username
+    password: password
+    brigade: brigade
+    message_label: message_label
+
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: dp(20)
+        padding: dp(40)
+        canvas.before:
+            Color:
+                rgba: 0.95, 0.95, 0.95, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Label:
+            text: 'Регистрация мастера'
+            font_size: '28sp'
+            bold: True
+            size_hint_y: None
+            height: self.texture_size[1]
+
+        Label:
+            id: message_label
+            text: ''
+            color: 1, 0, 0, 1
+            size_hint_y: None
+            height: self.texture_size[1]
+
+        TextInput:
+            id: username
+            hint_text: 'Имя пользователя'
+
+        TextInput:
+            id: password
+            hint_text: 'Пароль'
+            password: True
+
+        TextInput:
+            id: brigade
+            hint_text: 'Бригада'
+
+        BoxLayout:
+            size_hint_y: None
+            height: dp(48)
+            spacing: dp(10)
+
+            Button:
+                text: 'Зарегистрироваться'
+                on_press: root.register()
+
+            Button:
+                text: 'Назад'
+                on_press: app.root.current = 'login'
+
+<MasterScreen>:
+    name: 'master'
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: dp(20)
+        padding: dp(40)
+        canvas.before:
+            Color:
+                rgba: 0.95, 0.95, 0.95, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Label:
+            text: 'Добро пожаловать, мастер!'
+            font_size: '24sp'
+            bold: True
+
+        Button:
+            text: 'Создать заявку'
+            size_hint_y: None
+            height: dp(48)
+            on_press: app.root.current = 'create_request'
+
+        Button:
+            text: 'Мои заявки'
+            size_hint_y: None
+            height: dp(48)
+            on_press: root.view_requests()
+
+        Button:
+            text: 'Мои путевые листы'
+            size_hint_y: None
+            height: dp(48)
+            on_press: root.view_waybills()
+
+        Button:
+            text: 'Выйти'
+            size_hint_y: None
+            height: dp(48)
+            on_press: app.logout()
+
+<CreateRequestScreen>:
+    name: 'create_request'
+    equipment_type: equipment_type
+    quantity: quantity
+    desired_delivery_time: desired_delivery_time
+    planned_work_duration: planned_work_duration
+    distance_to_site: distance_to_site
+    message_label: message_label
+
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: dp(20)
+        padding: dp(40)
+        canvas.before:
+            Color:
+                rgba: 0.95, 0.95, 0.95, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Label:
+            text: 'Создание заявки'
+            font_size: '28sp'
+            bold: True
+
+        Label:
+            id: message_label
+            text: ''
+            color: 1, 0, 0, 1
+            size_hint_y: None
+            height: self.texture_size[1]
+
+        TextInput:
+            id: equipment_type
+            hint_text: 'Тип техники'
+
+        TextInput:
+            id: quantity
+            hint_text: 'Количество техники'
+            input_filter: 'int'
+
+        TextInput:
+            id: desired_delivery_time
+            hint_text: 'Время подачи на объект (YYYY-MM-DD HH:MM)'
+
+        TextInput:
+            id: planned_work_duration
+            hint_text: 'Планируемое время работы (в часах)'
+            input_filter: 'float'
+
+        TextInput:
+            id: distance_to_site
+            hint_text: 'Расстояние до объекта (в км)'
+            input_filter: 'float'
+
+        BoxLayout:
+            size_hint_y: None
+            height: dp(48)
+            spacing: dp(10)
+
+            Button:
+                text: 'Отправить'
+                on_press: root.submit_request()
+
+            Button:
+                text: 'Назад'
+                on_press: app.root.current = 'master'
+
+<RequestsListScreen>:
+    name: 'requests_list'
+    requests_list: requests_list
+
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: dp(20)
+        padding: dp(40)
+        canvas.before:
+            Color:
+                rgba: 0.95, 0.95, 0.95, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Label:
+            text: 'Мои заявки'
+            font_size: '28sp'
+            bold: True
+
+        ScrollView:
+            GridLayout:
+                id: requests_list
+                cols: 1
+                size_hint_y: None
+                height: self.minimum_height
+                row_default_height: dp(60)
+                spacing: dp(10)
+
+        Button:
+            text: 'Назад'
+            size_hint_y: None
+            height: dp(48)
+            on_press: app.root.current = 'master'
+
+<ReviewScreen>:
+    name: 'review'
+    review_input: review_input
+    message_label: message_label
+
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: dp(20)
+        padding: dp(40)
+        canvas.before:
+            Color:
+                rgba: 0.95, 0.95, 0.95, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Label:
+            text: 'Отзыв по заявке'
+            font_size: '28sp'
+            bold: True
+
+        Label:
+            id: message_label
+            text: ''
+            color: 1, 0, 0, 1
+            size_hint_y: None
+            height: self.texture_size[1]
+
+        TextInput:
+            id: review_input
+            hint_text: 'Введите ваш отзыв'
+            multiline: True
+            size_hint_y: None
+            height: dp(200)
+
+        BoxLayout:
+            size_hint_y: None
+            height: dp(48)
+            spacing: dp(10)
+
+            Button:
+                text: 'Сохранить'
+                on_press: root.submit_review()
+
+            Button:
+                text: 'Назад'
+                on_press: root.go_back()
+
+<LogisticianScreen>:
+    name: 'logistician'
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: dp(20)
+        padding: dp(40)
+        canvas.before:
+            Color:
+                rgba: 0.95, 0.95, 0.95, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Label:
+            text: 'Добро пожаловать, логист!'
+            font_size: '24sp'
+            bold: True
+
+        Button:
+            text: 'Просмотр заявок'
+            size_hint_y: None
+            height: dp(48)
+            on_press: root.view_requests()
+
+        Button:
+            text: 'Просмотр техники'
+            size_hint_y: None
+            height: dp(48)
+            on_press: root.view_equipment()
+
+        Button:
+            text: 'Просмотр путевых листов'
+            size_hint_y: None
+            height: dp(48)
+            on_press: root.view_waybills()
+
+        Button:
+            text: 'Выйти'
+            size_hint_y: None
+            height: dp(48)
+            on_press: app.logout()
+
+<LogisticianEquipmentScreen>:
+    name: 'logistician_equipment'
+    equipment_list: equipment_list
+
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: dp(20)
+        padding: dp(40)
+        canvas.before:
+            Color:
+                rgba: 0.95, 0.95, 0.95, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Label:
+            text: 'Доступная техника'
+            font_size: '28sp'
+            bold: True
+
+        ScrollView:
+            GridLayout:
+                id: equipment_list
+                cols: 1
+                size_hint_y: None
+                height: self.minimum_height
+                row_default_height: dp(60)
+                spacing: dp(10)
+
+        Button:
+            text: 'Назад'
+            size_hint_y: None
+            height: dp(48)
+            on_press: app.root.current = 'logistician'
+
+<LogisticianRequestsScreen>:
+    name: 'logistician_requests'
+    requests_list: requests_list
+
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: dp(20)
+        padding: dp(40)
+        canvas.before:
+            Color:
+                rgba: 0.95, 0.95, 0.95, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Label:
+            text: 'Заявки на спецтехнику'
+            font_size: '28sp'
+            bold: True
+
+        ScrollView:
+            GridLayout:
+                id: requests_list
+                cols: 1
+                size_hint_y: None
+                height: self.minimum_height
+                row_default_height: dp(60)
+                spacing: dp(10)
+
+        Button:
+            text: 'Назад'
+            size_hint_y: None
+            height: dp(48)
+            on_press: app.root.current = 'logistician'
+
+<LogisticianRequestDetailScreen>:
+    name: 'logistician_request_detail'
+    status_spinner: status_spinner
+    message_label: message_label
+
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: dp(20)
+        padding: dp(40)
+        canvas.before:
+            Color:
+                rgba: 0.95, 0.95, 0.95, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Label:
+            text: 'Детали заявки'
+            font_size: '28sp'
+            bold: True
+
+        Label:
+            id: message_label
+            text: ''
+            color: 1, 0, 0, 1
+            size_hint_y: None
+            height: self.texture_size[1]
+
+        ScrollView:
+            size_hint_y: None
+            height: dp(200)
+            Label:
+                id: request_details
+                text: ''
+                size_hint_y: None
+                height: self.texture_size[1]
+                text_size: self.width, None
+                markup: True  # Чтобы использовать теги [b]
+
+        Spinner:
+            id: status_spinner
+            text: 'Выберите статус'
+            values: ['Ожидание', 'Одобрено', 'Отменено', 'Выполнено']
+            size_hint_y: None
+            height: dp(48)
+
+        BoxLayout:
+            size_hint_y: None
+            height: dp(48)
+            spacing: dp(10)
+
+            Button:
+                text: 'Обновить статус'
+                on_press: root.update_status()
+
+            Button:
+                text: 'Назад'
+                on_press: root.go_back()
+
+<WaybillsListScreen>:
+    name: 'waybills_list'
+    waybills_list: waybills_list
+
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: dp(20)
+        padding: dp(40)
+        canvas.before:
+            Color:
+                rgba: 0.95, 0.95, 0.95, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Label:
+            text: 'Путевые листы'
+            font_size: '28sp'
+            bold: True
+
+        ScrollView:
+            GridLayout:
+                id: waybills_list
+                cols: 1
+                size_hint_y: None
+                height: self.minimum_height
+                row_default_height: dp(80)
+                spacing: dp(10)
+
+        Button:
+            text: 'Назад'
+            size_hint_y: None
+            height: dp(48)
+            on_press:
+                app.root.current = root.previous_screen
+
+<AdminScreen>:
+    name: 'admin'
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: dp(20)
+        padding: dp(40)
+        canvas.before:
+            Color:
+                rgba: 0.95, 0.95, 0.95, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Label:
+            text: 'Добро пожаловать, администратор!'
+            font_size: '24sp'
+            bold: True
+
+        Button:
+            text: 'Управление пользователями'
+            size_hint_y: None
+            height: dp(48)
+            on_press: root.manage_users()
+
+        Button:
+            text: 'Просмотр путевых листов'
+            size_hint_y: None
+            height: dp(48)
+            on_press: root.view_waybills()
+
+        Button:
+            text: 'Выйти'
+            size_hint_y: None
+            height: dp(48)
+            on_press: app.logout()
+
+<AdminUsersScreen>:
+    name: 'admin_users'
+    users_list: users_list
+
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: dp(20)
+        padding: dp(40)
+        canvas.before:
+            Color:
+                rgba: 0.95, 0.95, 0.95, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Label:
+            text: 'Управление пользователями'
+            font_size: '28sp'
+            bold: True
+
+        ScrollView:
+            GridLayout:
+                id: users_list
+                cols: 1
+                size_hint_y: None
+                height: self.minimum_height
+                row_default_height: dp(60)
+                spacing: dp(10)
+
+        Button:
+            text: 'Назад'
+            size_hint_y: None
+            height: dp(48)
+            on_press: app.root.current = 'admin'
+
+<AdminUserDetailScreen>:
+    name: 'admin_user_detail'
+    username_input: username_input
+    password_input: password_input
+    role_spinner: role_spinner
+    brigade_input: brigade_input
+    message_label: message_label
+
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: dp(20)
+        padding: dp(40)
+        canvas.before:
+            Color:
+                rgba: 0.95, 0.95, 0.95, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Label:
+            text: 'Управление пользователем'
+            font_size: '28sp'
+            bold: True
+
+        Label:
+            id: message_label
+            text: ''
+            color: 1, 0, 0, 1
+            size_hint_y: None
+            height: self.texture_size[1]
+
+        TextInput:
+            id: username_input
+            hint_text: 'Имя пользователя'
+
+        TextInput:
+            id: password_input
+            hint_text: 'Пароль (оставьте пустым, чтобы не изменять)'
+            password: True
+
+        Spinner:
+            id: role_spinner
+            text: 'Выберите роль'
+            values: ['Мастер', 'Логист', 'Администратор']
+            size_hint_y: None
+            height: dp(48)
+
+        TextInput:
+            id: brigade_input
+            hint_text: 'Бригада'
+
+        BoxLayout:
+            size_hint_y: None
+            height: dp(48)
+            spacing: dp(10)
+
+            Button:
+                text: 'Сохранить изменения'
+                on_press: root.save_changes()
+
+            Button:
+                text: 'Удалить пользователя'
+                on_press: root.delete_user()
+
+            Button:
+                text: 'Назад'
+                on_press: root.go_back()
